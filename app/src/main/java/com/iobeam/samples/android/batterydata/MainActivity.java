@@ -22,8 +22,8 @@ public class MainActivity extends Activity {
 
     /** Iobeam Parameters **/
     private static final long PROJECT_ID = -1; // Your PROJECT_ID
-    private static final String PROJECT_TOKEN = ""; // PROJECT_TOKEN (w/ write-access)
-    private static final String DEVICE_ID = ""; // Specify your DEVICE_ID
+    private static final String PROJECT_TOKEN = null; // PROJECT_TOKEN (w/ write-access)
+    private static final String DEVICE_ID = null; // Specify your DEVICE_ID
     /**/
 
     private TextView batteryLevel;
