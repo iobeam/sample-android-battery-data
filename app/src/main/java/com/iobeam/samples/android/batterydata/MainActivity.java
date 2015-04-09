@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
             int  temperature = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE,0);
             int  voltage = intent.getIntExtra(BatteryManager.EXTRA_VOLTAGE,0);
 
-            if ((currentBatteryLevel == -1) || (level - currentBatteryLevel) > 1) {
+            if ((currentBatteryLevel == -1) || (Math.abs(level - currentBatteryLevel) >= 1)) {
                 currentBatteryLevel = level;
 
                 /** Iobeam: Capture data point, send to API */
