@@ -3,7 +3,9 @@
 
 This is a basic sample app to illustrate how to send data to **iobeam** using the Java client library.
 
-[Here's what it looks like.](http://i.imgur.com/bAAImkx.png)
+Here's what it looks like:
+
+<img alt="Screenshot of the app" width="360" src="http://i.imgur.com/bAAImkx.png" />
 
 This app tracks the current battery level on your phone. Every time the battery level changes by more than 1%, the app uploads the timestamp and current level to **iobeam**.
 
