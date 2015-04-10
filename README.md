@@ -5,7 +5,7 @@ This is a basic sample app to illustrate how to send data to **iobeam** using th
 
 Here's what it looks like:
 
-<img alt="Screenshot of the app" width="360" src="http://i.imgur.com/bAAImkx.png" />
+<img alt="Screenshot of the app" width="360" src="http://i.imgur.com/xw5T0tS.png" />
 
 This app tracks the current battery level on your phone. Every time the battery level changes by more than 1%, the app uploads the timestamp and current level to **iobeam**.
 
