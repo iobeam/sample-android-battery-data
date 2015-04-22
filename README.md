@@ -32,16 +32,16 @@ It's all in `MainActivity.java`.
 
 Initialize the iobeam client library:
 
-	Iobeam.init(this.getFilesDir().getAbsolutePath(), PROJECT_ID, PROJECT_TOKEN, DEVICE_ID);
+	iobeam = new Iobeam(this.getFilesDir().getAbsolutePath(), PROJECT_ID, PROJECT_TOKEN, DEVICE_ID);
 
 Capture a data point:
 
 	DataPoint dp = new DataPoint(currentBatteryLevel);
-	Iobeam.addData("power-level", dp);
+	iobeam.addData("power-level", dp);
 
 Send to the Iobeam API:
 
-	Iobeam.sendAsync();
+	iobeam.sendAsync();
 
 That's it!
 
