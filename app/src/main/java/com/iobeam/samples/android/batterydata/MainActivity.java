@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.iobeam.api.ApiException;
@@ -24,6 +22,8 @@ public class MainActivity extends Activity {
     private static final long PROJECT_ID = -1; // Your PROJECT_ID
     private static final String PROJECT_TOKEN = null; // PROJECT_TOKEN (w/ write-access)
     private static final String DEVICE_ID = null; // Specify your DEVICE_ID
+
+    private Iobeam iobeam;
     /**/
 
     private TextView batteryLevel;
@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
 
         /** Iobeam: Initialize the client library */
         try {
-            Iobeam.init(this.getFilesDir().getAbsolutePath(), PROJECT_ID, PROJECT_TOKEN, DEVICE_ID);
+            iobeam = new Iobeam(this.getFilesDir().getAbsolutePath(), PROJECT_ID, PROJECT_TOKEN, DEVICE_ID);
         } catch (ApiException e) {
             e.printStackTrace();
         }
@@ -67,10 +67,10 @@ public class MainActivity extends Activity {
 
                 /** Iobeam: Capture data point, send to API */
                 DataPoint dp = new DataPoint(currentBatteryLevel);
-                Iobeam.addData("power-level", dp);
+                iobeam.addData("power-level", dp);
 
                 try {
-                    Iobeam.sendAsync();
+                    iobeam.sendAsync();
                 } catch (ApiException e) {
                     e.printStackTrace();
                 }
