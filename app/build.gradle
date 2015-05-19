@@ -26,5 +26,5 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.iobeam:iobeam-client-java:0.2'
+    compile 'com.iobeam:iobeam-client-java:0.3.1'
 }
