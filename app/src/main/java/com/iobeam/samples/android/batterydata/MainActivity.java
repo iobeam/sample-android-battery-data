@@ -11,9 +11,11 @@ import android.widget.TextView;
 
 import com.iobeam.api.ApiException;
 import com.iobeam.api.client.Iobeam;
-import com.iobeam.api.resource.DataPoint;
+import com.iobeam.api.resource.DataBatch;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainActivity extends Activity {
@@ -22,9 +24,10 @@ public class MainActivity extends Activity {
     private static final long PROJECT_ID = -1; // Your PROJECT_ID
     private static final String PROJECT_TOKEN = null; // PROJECT_TOKEN (w/ write-access)
     private static final String DEVICE_ID = null; // Specify your DEVICE_ID
+    /**/
 
     private Iobeam iobeam;
-    /**/
+    private DataBatch iobeamBatch;
 
     private TextView batteryLevel;
     private TextView batteryStats;
@@ -39,13 +42,18 @@ public class MainActivity extends Activity {
         batteryLevel = (TextView)findViewById(R.id.battery_level);
         batteryStats = (TextView)findViewById(R.id.battery_stats);
 
-        /** Iobeam: Initialize the client library */
-        try {
-            iobeam = new Iobeam(this.getFilesDir().getAbsolutePath(), PROJECT_ID, PROJECT_TOKEN, DEVICE_ID);
-        } catch (ApiException e) {
-            e.printStackTrace();
-        }
-        /**/
+        String path = this.getFilesDir().getAbsolutePath();
+
+        /** iobeam: Initialize the client library */
+        // You will need to register your DEVICE_ID first (e.g., via the CLI)
+        iobeam = new Iobeam.Builder(PROJECT_ID, PROJECT_TOKEN).saveIdToPath(path)
+                .setDeviceId(DEVICE_ID).build();
+
+        /** iobeam: Define data schema for transmissions */
+        String[] columns = new String[]{"battery_level", "temperature", "voltage"};
+        iobeamBatch = new DataBatch(columns);
+        iobeam.trackDataBatch(iobeamBatch);
+
     }
 
     private BroadcastReceiver batteryInfoReceiver = new BroadcastReceiver() {
@@ -66,8 +74,11 @@ public class MainActivity extends Activity {
                 currentBatteryLevel = level;
 
                 /** Iobeam: Capture data point, send to API */
-                DataPoint dp = new DataPoint(currentBatteryLevel);
-                iobeam.addData("power-level", dp);
+                Map<String, Object> values = new HashMap<String, Object>();
+                values.put("battery_level", currentBatteryLevel);
+                values.put("temperature", ((double)temperature/10));
+                values.put("voltage", voltage);
+                iobeamBatch.add(values);
 
                 try {
                     iobeam.sendAsync();
