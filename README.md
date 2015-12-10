@@ -17,10 +17,12 @@ First, you need a `project_id`, and `project_token` (with write-access) from a v
 
 Next, find these lines in `MainActivity.java`, and update with your `project_id` and `project_token`. You also need to pick a `device_id` for your phone (must be **globally unique** and **at least 16 characters long**). E.g., "nerf-herder-1138".
 
-	/** Iobeam Parameters **/
-	private static final long PROJECT_ID = -1; // Your PROJECT_ID
-	private static final String PROJECT_TOKEN = null; // PROJECT_TOKEN (w/ write-access)
-	private static final String DEVICE_ID = null; // Specify your DEVICE_ID
+```java
+/** Iobeam Parameters **/
+private static final long PROJECT_ID = -1; // Your PROJECT_ID
+private static final String PROJECT_TOKEN = null; // PROJECT_TOKEN (w/ write-access)
+private static final String DEVICE_ID = null; // Specify your DEVICE_ID
+```
 
 *(Note: We specify the `device_id` in this example for simplicity, but you can also allow the library to auto-generate the `device_id` for you. Please see our [Java / Android client library docs](https://github.com/iobeam/iobeam-client-java) for more.)*
 
@@ -32,16 +34,34 @@ It's all in `MainActivity.java`.
 
 Initialize the iobeam client library:
 
-	iobeam = new Iobeam(this.getFilesDir().getAbsolutePath(), PROJECT_ID, PROJECT_TOKEN, DEVICE_ID);
+```java
+iobeam = new Iobeam.Builder(PROJECT_ID, PROJECT_TOKEN).saveIdToPath(path)
+                .setDeviceId(DEVICE_ID).build();
+```
+
+Define the data schema: 
+
+```java
+String[] columns = new String[]{"battery_level", "temperature", "voltage"};
+iobeamBatch = new DataBatch(columns);
+iobeam.trackDataBatch(iobeamBatch);
+```
 
 Capture a data point:
 
-	DataPoint dp = new DataPoint(currentBatteryLevel);
-	iobeam.addData("power-level", dp);
+```java
+Map<String, Object> values = new HashMap<String, Object>();
+values.put("battery_level", currentBatteryLevel);
+values.put("temperature", ((double)temperature/10));
+values.put("voltage", voltage);
+iobeamBatch.add(values);
+```
 
 Send to the Iobeam API:
 
-	iobeam.sendAsync();
+```java
+iobeam.sendAsync();
+```
 
 That's it!
 
