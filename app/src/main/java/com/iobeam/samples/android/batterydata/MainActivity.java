@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.iobeam.api.ApiException;
 import com.iobeam.api.client.Iobeam;
-import com.iobeam.api.resource.DataBatch;
+import com.iobeam.api.resource.DataStore;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class MainActivity extends Activity {
     /**/
 
     private Iobeam iobeam;
-    private DataBatch iobeamBatch;
+    private DataStore store;
 
     private TextView batteryLevel;
     private TextView batteryStats;
@@ -50,10 +50,7 @@ public class MainActivity extends Activity {
                 .setDeviceId(DEVICE_ID).build();
 
         /** iobeam: Define data schema for transmissions */
-        String[] columns = new String[]{"battery_level", "temperature", "voltage"};
-        iobeamBatch = new DataBatch(columns);
-        iobeam.trackDataBatch(iobeamBatch);
-
+        store = iobeam.createDataStore("battery_level", "temperature", "voltage");
     }
 
     private BroadcastReceiver batteryInfoReceiver = new BroadcastReceiver() {
@@ -78,7 +75,7 @@ public class MainActivity extends Activity {
                 values.put("battery_level", currentBatteryLevel);
                 values.put("temperature", ((double)temperature/10));
                 values.put("voltage", voltage);
-                iobeamBatch.add(values);
+                store.add(values);
 
                 try {
                     iobeam.sendAsync();
